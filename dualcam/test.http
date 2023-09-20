@@ -1,0 +1,21 @@
+GET http://127.0.0.1:6800/dualcam/file/
+
+### file_id
+GET http://127.0.0.1:6800/dualcam/file/10759
+
+### record
+GET http://127.0.0.1:6800/dualcam/record/2993553
+
+### records cross
+GET http://127.0.0.1:6800/dualcam/records/
+
+### records of file_key
+GET http://127.0.0.1:6800/dualcam/records/10759
+
+### create a new file
+POST http://127.0.0.1:6800/dualcam/file/
+Content-Type: application/json
+
+{
+  "device": "860896051208304"
+}
