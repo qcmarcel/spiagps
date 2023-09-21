@@ -3,7 +3,7 @@ from dualcam.models import File, Record, FileRecord
 
 FIELDS_OF_RECORD = ["content_block", "record_stamp", "record_offset"]
 
-FIELDS_OF_FILE = ["device_key", "file_stamp", "mime_type", "temp_file", "orientation"]
+FIELDS_OF_FILE = ["file_id", "device_key", "file_stamp", "mime_type", "temp_file", "orientation"]
 
 
 class FileSerializer(serializers.ModelSerializer):

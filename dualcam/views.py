@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from dualcam import merge_request
 from dualcam.models import File, Record, FileRecord
 from dualcam.serializers import FileSerializer, RecordSerializer, FileRecordSerializer, FIELDS_OF_FILE
 
@@ -31,9 +32,15 @@ class FileApi(APIView):
         print('post:file', request.data, args, kwargs)
         if request is None or request.data is None or len(request.data) <= 0:
             return Response(json.dumps({"error": "No se ha recibido ningún dato."}), status=status.HTTP_400_BAD_REQUEST)
-        fields_data = dict.fromkeys(FIELDS_OF_FILE, "")
-        data = {}
-        return Response(json.loads(json.dumps({"message": data})), status=status.HTTP_202_ACCEPTED)
+        file_data = merge_request(request.data, FIELDS_OF_FILE)
+        serializer = FileSerializer(data=file_data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as file_save_e:
+            return Response(file_save_e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RecordApi(APIView):
