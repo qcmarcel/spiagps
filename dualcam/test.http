@@ -4,7 +4,7 @@ GET http://127.0.0.1:6800/dualcam/file/
 GET http://127.0.0.1:6800/dualcam/file/10759
 
 ### record
-GET http://127.0.0.1:6800/dualcam/record/2993553
+GET http://127.0.0.1:6800/dualcam/record/2993068
 
 ### records cross
 GET http://127.0.0.1:6800/dualcam/records/
@@ -17,5 +17,28 @@ POST http://127.0.0.1:6800/dualcam/file/
 Content-Type: application/json
 
 {
-  "device": "860896051208304"
+  "device": "860896051208304",
+  "mime_type": "application/octet-stream",
+  "temp_file": "test.h265",
+  "orientation": "rear"
 }
+
+### create a new record from file_key
+POST http://127.0.0.1:6800/dualcam/records/10759
+Content-type: application/json
+
+{
+  "content_block": "fnrwe89tjb54y6bmpioy"
+}
+
+### count device properties by parent_event & property_stamp (datetime)
+GET http://127.0.0.1:6800/dualcam/device_properties/?parent_event=0&type=count&property_stamp=2023-06-08 09:44:54
+
+### count device properties by parent_event & property_stamp (datetime)
+GET http://127.0.0.1:6800/dualcam/device_properties/?parent_event=0&type=count&property_stamp=1686217494
+
+### count device properties by parent_event & property_stamp (UTC = +5 Local time | GMT-5 = Local time)
+GET http://127.0.0.1:6800/dualcam/device_properties/?parent_event=0&type=count&property_stamp=1696968778
+
+### max property by event_key & property_value
+GET http://127.0.0.1:6800/dualcam/properties/?event_key=longitude&type=max&property_value=-77
