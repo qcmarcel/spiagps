@@ -42,3 +42,12 @@ GET http://127.0.0.1:6800/dualcam/device_properties/?parent_event=0&type=count&p
 
 ### max property by event_key & property_value
 GET http://127.0.0.1:6800/dualcam/properties/?event_key=longitude&type=max&property_value=-77
+
+### count files by mime_type and temp_file
+GET http://127.0.0.1:6800/dualcam/file/?mime_type=application/octet-stream&type=count&temp_file=test12.h265
+
+### max file by mime_type and temp_file
+GET http://127.0.0.1:6800/dualcam/file/?mime_type=application/octet-stream&type=max&temp_file=test12.h265
+
+### file(s) by mime_type and temp_file
+GET http://127.0.0.1:6800/dualcam/file/?mime_type=application/octet-stream&temp_file=test12.h265

@@ -24,11 +24,35 @@ class FileApi(APIView):
         # print('file/', request, args, kwargs)
         file_repo = File.objects
         many_files = True
-        if kwargs is None or len(kwargs) <= 0:
+        no_kwargs = kwargs is None or len(kwargs) <= 0
+        no_query_params = request is None or not hasattr(request, "query_params")
+        if no_kwargs and no_query_params:
             files = file_repo.all()
         else:
-            if "file_id" not in kwargs:
+            if not no_kwargs:
                 files = file_repo.filter(**kwargs)
+            elif not no_query_params:
+                query_params_dict = dict(request.query_params)
+                query_type = False
+                if "type" in list(query_params_dict.keys()):
+                    query_type = query_params_dict["type"]
+                    if type(query_type) is list:
+                        query_type = query_type.pop()
+                query_params = {k: v if type(v) is not list else v.pop()
+                                for k, v in query_params_dict.items() if k not in QUERY_CONFIG}
+                files = file_repo.filter(**query_params)
+                if query_type:
+                    if query_type == "count":
+                        count_response = {"num": files.count()}
+                        return Response(count_response, status=status.HTTP_200_OK)
+                    if query_type == "max":
+                        id = 'file_id'
+                        max_values = files.order_by('-%s' % id).values('%s' % id)
+                        last_value = None
+                        if max_values is not None and len(max_values) > 0:
+                            last_value = dict(max_values.first())[id]
+                        max_response = {"max": last_value}
+                        return Response(max_response, status=status.HTTP_200_OK)
             else:
                 files = file_repo.get(**kwargs)
                 many_files = False
