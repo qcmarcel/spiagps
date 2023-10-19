@@ -6,6 +6,13 @@ from pytz import timezone
 
 DEFAULT_DATETIME = "%Y-%m-%d %H:%M:%S"
 
+UTC = 'UTC'
+
+AMERICA_BOGOTA = 'America/Bogota'
+
+QUERY_CONFIG = ["type"]
+
+UTF8 = 'utf-8'
 
 def merge_request(data, fields=None, fill_value=None, defaults=None, convert=None):
     if fields is None:

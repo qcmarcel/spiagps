@@ -2,19 +2,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dualcam import merge_request, timestamp_convert
+from dualcam import merge_request, timestamp_convert, bytea_convert
+from dualcam import QUERY_CONFIG, UTC
 from dualcam.models import File, Record, FileRecord, DeviceProperty, Property
 from dualcam.serializers import FIELDS_OF_FILE, FIELDS_OF_FILE_RECORDS, FIELDS_OF_RECORD
 from dualcam.serializers import FileSerializer, RecordSerializer, FileRecordSerializer
 from dualcam.serializers import DevicePropertySerializer, PropertySerializer
 
-UTC = 'UTC'
 
-AMERICA_BOGOTA = 'America/Bogota'
-
-QUERY_CONFIG = ["type"]
-
-UTF8 = 'utf-8'
 
 
 # Create your views here.
@@ -128,7 +123,7 @@ class FileRecordApi(APIView):
                     response_data = {"error": "File not found", "message": str(file_repo_e)}
                     return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
                 offset_default = {"record_offset": 0}
-                content_block_convert = {"content_block": lambda v: bytearray(v, UTF8)}
+                content_block_convert = {"content_block": lambda v: bytea_convert(v)}
                 record_data = merge_request(request_data, FIELDS_OF_RECORD,
                                             defaults=offset_default, convert=content_block_convert)
                 serializer = RecordSerializer(data=record_data)
@@ -182,7 +177,7 @@ class DevicePropertyApi(APIView):
                         query_type = query_type.pop()
                 query_params = {k: v if type(v) is not list else v.pop()
                                 for k, v in query_params_dict.items() if k not in QUERY_CONFIG}
-                bytearray_convert = {"parent_event": lambda v: bytearray(v, UTF8),
+                bytearray_convert = {"parent_event": lambda v: bytea_convert(v),
                                      "property_stamp": lambda v: timestamp_convert(v, UTC)}
                 fields_in_device_properties = list(query_params.keys())
                 query_params = merge_request(query_params, fields_in_device_properties, convert=bytearray_convert)
@@ -219,8 +214,8 @@ class PropertyApi(APIView):
                         query_type = query_type.pop()
                 query_params = {k: v if type(v) is not list else v.pop()
                                 for k, v in query_params_dict.items() if k not in QUERY_CONFIG}
-                bytearray_convert = {"event_key": lambda v: bytearray(v, UTF8),
-                                     "property_value": lambda v: bytearray(v, UTF8)}
+                bytearray_convert = {"event_key": lambda v: bytea_convert(v),
+                                     "property_value": lambda v: bytea_convert(v)}
                 fields_in_device_properties = list(query_params.keys())
                 query_params = merge_request(query_params, fields_in_device_properties, convert=bytearray_convert)
                 properties = property_repo.filter(**query_params)

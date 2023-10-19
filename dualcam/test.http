@@ -51,3 +51,11 @@ GET http://127.0.0.1:6800/dualcam/file/?mime_type=application/octet-stream&type=
 
 ### file(s) by mime_type and temp_file
 GET http://127.0.0.1:6800/dualcam/file/?mime_type=application/octet-stream&temp_file=test12.h265
+
+### create a new record from file_key (hex string)
+POST http://127.0.0.1:6800/dualcam/records/10759
+Content-type: application/json
+
+{
+  "content_block": "0x30"
+}
