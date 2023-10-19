@@ -45,3 +45,12 @@ def timestamp_convert(value, time_zone=None, date_format=DEFAULT_DATETIME):
             date_obj = date_obj.astimezone(timezone(time_zone))
         date_string = date_obj.strftime(date_format)
     return date_string
+
+
+def bytea_convert(value):
+    if value is None:
+        return None
+    if value[:2] == "0x":
+        bytes_from_hex = bytes.fromhex(value[2:])
+        return bytearray(bytes_from_hex)
+    return bytearray(value, UTF8)
